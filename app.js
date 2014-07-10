@@ -7,6 +7,8 @@ var bcrypt 			= require('bcrypt');
 var mongoose 		= require('mongoose');
 var session    		= require('express-session');
 var MongoStore 		= require('connect-mongo')(session);
+var fs 				= require('fs');
+var hogan 			= require('hogan.js');
 
 
 var app     		= express();
@@ -68,6 +70,23 @@ function authorized(sites, site, name, cb){
 	});
 }
 
+// Render mustache-templates with hogan
+var render = function(filename, data, cb){
+	fs.readFile(__dirname+'/templates/'+filename, function(err, template_content){
+		if(err) throw err;
+		var template = hogan.compile(template_content.toString());
+		cb(template.render(data));
+	});
+}
+
+// return response with commenting-form
+var commentform = function(req, res){
+	var data = {site:req.query.site, page:req.query.page};
+	render('form.html', data, function(rendered){
+		res.send(rendered);
+	});
+};
+
 /* 
 * ROUTES
 */
@@ -91,6 +110,32 @@ app.get('/comments', function(req, res){
 		});
 	});
 });
+
+
+/*
+* Comment form (IFRAME) [render stuff in server]
+*/
+
+// render comment-form for iframe
+app.get('/comment', commentform);
+
+// process new comment
+app.post('/comment', function(req, res){
+
+	Page.findOne({site:req.query.site, name:req.query.page}, function(err, page){
+		if(err) throw err;
+		if(!page) page = new Page({site:req.query.site, name:req.query.page});
+
+		var c = {author:req.body.name, content:req.body.content};
+		// push new comment
+		page.comments.push(c);
+		page.save(function(err, page){
+			// Show the comment-form again
+			commentform(req, res);
+		});
+	});
+});
+
 
 
 
