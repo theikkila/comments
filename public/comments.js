@@ -4,7 +4,7 @@
 
 
 	// Settings
-	var settings = {};
+	var settings = window.Comments || {};
 	var selector = settings.selector || '#comments';
 	// URL of the comments-server
 	var domain = settings.domain || 'http://comments.example.com';
