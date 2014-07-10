@@ -9,6 +9,8 @@ var session    		= require('express-session');
 var MongoStore 		= require('connect-mongo')(session);
 var fs 				= require('fs');
 var hogan 			= require('hogan.js');
+var _ 				= require('lodash');
+
 
 
 var app     		= express();
@@ -91,6 +93,12 @@ var commentform = function(req, res){
 * ROUTES
 */
 
+
+/*
+* ToDO
+* Make the api better currently random routes there and here
+*/
+
 // The main callback, returns if authorized to remove comments and returns the comments of page
 // Todo: get rid of if-else-callback-fucking-jungle
 app.get('/comments', function(req, res){
@@ -135,6 +143,41 @@ app.post('/comment', function(req, res){
 		});
 	});
 });
+
+/*
+* Comment remove route
+*/
+
+// remove comment from page
+app.get('/remove', function(req, res){
+	if(!req.session.loggedin){
+		//console.log("Not logged in!");
+		// cant remove if not logged in
+		res.jsonp(403, {status:"Forbidden"});
+		return;
+	}
+	Page.findOne({site:req.query.site, name:req.query.page}, function(err, page){
+		if(!page){
+			// page not found so can't remove
+			res.jsonp(404, {status:"Thread not found"});
+		}
+		if(containsSite(req.session.sites, page.site)){
+			// User has rights to remove messages
+			var comment = _.find(page.comments, function(comment){
+				return comment._id == req.query.comment;
+			});
+			page.comments = _.without(page.comments, comment);
+			page.save(function(err, page){
+				res.jsonp(page);
+			});
+		}else{
+			//console.log("You don't have rights to administer this site");
+			// User is not site administrator
+			res.jsonp(403, {status:"Forbidden"});
+		}
+	});
+});
+
 
 
 /*

@@ -16,6 +16,7 @@
     "connect-mongo": "~0.4.1",
     "mongoose": "~3.8.12",
     "bcrypt": "~0.7.8",
-    "hogan.js": "~3.0.2"
+    "hogan.js": "~3.0.2",
+    "lodash": "~2.4.1"
   }
 }
