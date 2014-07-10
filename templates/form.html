@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Comment form</title>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<style>
+
+
+.tcontainer{
+	width: 100%;
+	display: block;
+}
+#name-field{
+	width: 100%;
+}
+#comment-field{
+	width: 100%;
+	height: 60px;
+}
+form{
+	font-family: 'Open Sans', sans-serif;
+}
+
+</style>
+</head>
+<body>
+<form class="" method="post" action="/comment?site={{site}}&page={{page}}">
+	<fieldset class="tcontainer">
+
+			<label for="name">Author</label>
+			<input id="name-field" type="text" name="name" placeholder="Enter your name">
+
+
+			<label for="content">Comment</label>
+			<textarea id="comment-field" name="content" placeholder="Enter your comment"></textarea>
+			<button type="submit" class="pure-button">Lähetä kommentti</button>
+	</fieldset>
+</form>
+	
+</body>
+</html>
