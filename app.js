@@ -13,6 +13,12 @@ var app     		= express();
 
 var config 			= require('./config');
 
+// Mongoose init
+mongoose.connect('mongodb://'+config.mongo.host+'/'+config.mongo.db);
+
+// Mongoose models
+var Page = mongoose.model('Page', {site:String, name:String, comments:[{author:String, date:{type:Date, default:new Date()}, content:String}]});
+var Owner = mongoose.model('Owner', {name:String, email:String, sites:[{name:String}], password:String});
 
 
 app.use(session({
