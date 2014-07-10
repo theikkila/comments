@@ -1,0 +1,42 @@
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<style>
+.md-content{
+	text-align: center;
+	font-family: 'Open Sans', sans-serif;
+}
+.md-content input {
+	margin-bottom: 10px;
+	border-radius: 3px;
+	border: 1px solid #DDD;
+	padding: 10px;
+	width: 300px;
+}
+.md-content button {
+	background-color: #1ECEC7;
+	border: 0;
+	border-radius: 3px;
+	color: #FFF;
+	width: 300px;
+	padding: 10px;
+}
+
+</style>
+<div class="md-content">
+	{{^loggedin}}
+	<h3>Log in</h3>
+	<div>
+		{{#message}}<strong style="color:red;">{{message}}</strong>{{/message}}
+		<form action="/login" method="post">
+		<input type="text" name="username" id="username" placeholder="Email">
+		<br>
+		<input type="password" name="password" id="password" placeholder="Password">
+		<br>
+		<button type="submit" class="md-submit">Log in</button>
+		</form>
+	</div>
+	{{/loggedin}}
+	{{#loggedin}}
+	<h3>You are logged in</h3>
+	<button onclick="window.location.href='/logout';" class="md-submit">Log out</button>
+	{{/loggedin}}
+</div>
