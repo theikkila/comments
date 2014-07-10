@@ -137,7 +137,40 @@ app.post('/comment', function(req, res){
 });
 
 
+/*
+* Login form (IFRAME) [render stuff in server]
+*/
+// Render login-form
+app.get('/login', function(req, res){
+	var data = {loggedin:req.session.loggedin};
+	render('login.html', data, function(rendered){
+		res.send(rendered);
+	});
+});
 
+// Process login
+app.post('/login', function(req, res){
+	var message = null;
+	Owner.findOne({email:req.body.username}, function(err, own){
+		// check the credientials
+		if(own && bcrypt.compareSync(req.body.password, own.password)){
+			// User credientials OK let em in
+			req.session.loggedin = true;
+			req.session.sites = own.sites;
+		}else{
+			// Login failed
+			req.session.loggedin = false;
+			req.session.sites = [];
+			message = "The username or password you entered is incorrect."
+		}
+
+		var data = {loggedin:req.session.loggedin, message:message};
+		render('login.html', data, function(rendered){
+			res.send(rendered);
+		});
+	});
+
+});
 
 app.listen(config.port);
 console.log("App running on", config.port);
