@@ -172,6 +172,15 @@ app.post('/login', function(req, res){
 
 });
 
+// logout route
+
+app.get('/logout', function(req, res){
+	req.session.loggedin = false;
+	req.session.sites = [];
+	res.redirect('/login');
+});
+
+
 app.listen(config.port);
 console.log("App running on", config.port);
 
